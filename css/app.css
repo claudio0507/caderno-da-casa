@@ -33,6 +33,7 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important} /* vence regras de display dos componentes (.login, .btn, .field, .note) */
 html,body{height:100%}
 html{overflow-x:hidden}
 body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,sans-serif;
