@@ -82,10 +82,18 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now caderno
 sudo systemctl status caderno --no-pager
 
-# 5. HTTPS: edite o domínio no Caddyfile e recarregue
+# 5a. HTTPS com Caddy (VPS sem nada nas portas 80/443): edite o domínio e inicie
 sudo cp /opt/caderno/app/server/Caddyfile /etc/caddy/Caddyfile
 sudo nano /etc/caddy/Caddyfile
-sudo systemctl reload caddy
+sudo systemctl enable --now caddy
+
+# 5b. HTTPS com nginx (VPS que já tem nginx nas portas 80/443): use server/nginx.conf
+sudo cp /opt/caderno/app/server/nginx.conf /etc/nginx/sites-available/caderno
+sudo nano /etc/nginx/sites-available/caderno            # troque o domínio
+sudo ln -s /etc/nginx/sites-available/caderno /etc/nginx/sites-enabled/caderno
+sudo nginx -t && sudo systemctl reload nginx
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d SEU.DOMINIO --redirect          # emite o certificado e força HTTPS
 
 # 6. backup diário (7 cópias rotativas em /opt/caderno)
 ( sudo crontab -u caderno -l 2>/dev/null; echo '30 3 * * * python3 /opt/caderno/app/server/server.py backup /opt/caderno/backup-$(date +\%u).db' ) | sudo crontab -u caderno -
@@ -106,7 +114,8 @@ js/app.js              estado, sincronização com o servidor, recorrências, pr
 js/theme-init.js       aplica o tema salvo antes do CSS
 server/server.py       servidor HTTP + API + SQLite (Python 3.9+, sem dependências)
 server/caderno.service unidade systemd
-server/Caddyfile       proxy HTTPS
+server/Caddyfile       proxy HTTPS (Caddy)
+server/nginx.conf      proxy HTTPS (nginx + certbot)
 data/                  banco SQLite (criado ao rodar; fora do git)
 docs/                  protótipo anterior (v0.3) para referência
 ```
