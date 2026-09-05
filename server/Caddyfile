@@ -1,0 +1,9 @@
+# Substitua pelo seu domínio. O Caddy emite e renova o certificado HTTPS sozinho.
+casa.exemplo.com.br {
+	encode gzip
+	reverse_proxy 127.0.0.1:8765
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+}
