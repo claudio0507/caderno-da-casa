@@ -99,7 +99,9 @@ sudo certbot --nginx -d SEU.DOMINIO --redirect          # emite o certificado e 
 ( sudo crontab -u caderno -l 2>/dev/null; echo '30 3 * * * python3 /opt/caderno/app/server/server.py backup /opt/caderno/backup-$(date +\%u).db' ) | sudo crontab -u caderno -
 ```
 
-Firewall: só 80 e 443 abertos; o app escuta em `127.0.0.1:8765`. Atualizar o app: substitua os arquivos em `/opt/caderno/app` (a pasta `data/` fica) e `sudo systemctl restart caderno`.
+Firewall: só 80 e 443 abertos; o app escuta em `127.0.0.1:8765`. Atualizar o app: `cd /opt/caderno/app && sudo -u caderno git pull && sudo systemctl restart caderno` (a pasta `data/` fica).
+
+Instalação atual: `https://caderno.viaxis.tech`, VPS com nginx existente (passo 5b) e certificado Let's Encrypt renovado pelo certbot.
 
 ## Identidade visual
 
